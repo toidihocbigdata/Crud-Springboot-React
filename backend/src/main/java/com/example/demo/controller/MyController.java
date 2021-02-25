@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.ServerEndpoint;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -43,5 +44,9 @@ public class MyController {
     @PostMapping("/patients/new")
     public boolean addNewPatient(@RequestBody Patient patient){
         return patientService.add(patient);
+    }
+    @PutMapping ("/patients/{id}")
+    public boolean updatePatient(@RequestBody Patient patient, @PathVariable long id){
+        return patientService.update(patient, id);
     }
 }

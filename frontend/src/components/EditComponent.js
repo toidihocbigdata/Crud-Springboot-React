@@ -20,19 +20,20 @@ class EditComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        Done: false,
-        TempPatient: {
-          name: "",
-          gender: "",
-          age: "",
-          phone_number: "",
-          email: "",
-        },
+      Done: -1,
+      TempPatient: {
+        name: "",
+        gender: "",
+        age: "",
+        phone_number: "",
+        email: "",
+      },
     };
     this.handleInput = this.handleInput.bind(this);
     this.handleBack = this.handleBack.bind(this);
-    this.handleSubmit = this.handleSure.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.refreshInfo = this.refreshInfo.bind(this);
+    this.handleSure = this.handleSure.bind(this);
   }
 
   componentDidMount() {
@@ -42,22 +43,26 @@ class EditComponent extends Component {
   handleSubmit = (evt) => {
     evt.preventDefault();
     let temp = this.state;
-    temp.Done = true;
+    temp.Done = 1;
+    console.log("submit");
     this.setState(temp);
   };
 
   handleSure = (evt) => {
     evt.preventDefault();
+    console.log("sureee!")
     let data = this.state.TempPatient;
-    data["created_at"] = new Date().toUTCString();
     data["updated_at"] = new Date().toUTCString();
-    PatientDataService.createPatient(data);
+    console.log(data);
+    PatientDataService.updatePatientById(this.props.id, data).then(
+      this.setState({ Done: 2 })
+    );
   };
 
   handleBack = (evt) => {
     evt.preventDefault();
     let temp = this.state;
-    temp.Done = false;
+    temp.Done = 0;
     this.setState(temp);
   };
 
@@ -69,103 +74,106 @@ class EditComponent extends Component {
     this.setState(temp);
   };
 
-  refreshInfo = () =>
-  {
-    PatientDataService.retrievePatientById(this.props.id).then(
-        (response) => {
-            this.setState({Done: false, TempPatient : response.data});
-        }
-        );
-  }
+  refreshInfo = () => {
+    PatientDataService.retrievePatientById(this.props.id).then((response) => {
+      this.setState({ Done: 0, TempPatient: response.data });
+    });
+  };
 
   render() {
     const { classes } = this.props;
-    // console.log('rendering');
-    // console.log(this.state.TempPatient);
-    if (this.state.Done == false) {
-      return (
-        <div className={classes.root}>
-          <h2> Edit Patient ID : {this.props.id}</h2>
-          {/* <form onSubmit={this.handleSubmit}> */}
-          <TextField
-            label="Name"
-            name="name"
-            defaultValue={this.state.TempPatient.name}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Gender"
-            name="gender"
-            defaultValue={this.state.TempPatient.gender}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Age"
-            name="age"
-            defaultValue={this.state.TempPatient.age}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Phone Number"
-            name="phone_number"
-            defaultValue={this.state.TempPatient.phone_number}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Email"
-            name="email"
-            defaultValue={this.state.TempPatient.email}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <Button
-            //   type="submit"
-            onClick={this.handleSubmit}
-            variant="contained"
-            className={classes.button}
-            color="primary"
-          >
-            Submit
-          </Button>
-          {/* </form> */}
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <h2> New patient info</h2>
-          {Object.keys(this.state.TempPatient).map((a) => (
-            <p>
-              {a} : {this.state.TempPatient[a]}
-            </p>
-          ))}
-          <p> Are you sure?</p>
-          <Button
-            variant="contained"
-            className={classes.button}
-            color="primary"
-            onClick={this.handleBack}
-          >
-            No
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.button}
-            color="primary"
-          >
-            Sure
-          </Button>
-        </div>
-      );
+    switch (this.state.Done) {
+      case 0:
+        return (
+          <div className={classes.root}>
+            <h2> Edit Patient ID : {this.props.id}</h2>
+            <TextField
+              label="Name"
+              name="name"
+              defaultValue={this.state.TempPatient.name}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Gender"
+              name="gender"
+              defaultValue={this.state.TempPatient.gender}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Age"
+              name="age"
+              defaultValue={this.state.TempPatient.age}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Phone Number"
+              name="phone_number"
+              defaultValue={this.state.TempPatient.phone_number}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Email"
+              name="email"
+              defaultValue={this.state.TempPatient.email}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <Button
+              onClick={this.handleSubmit}
+              variant="contained"
+              className={classes.button}
+              color="primary"
+            >
+              Submit
+            </Button>
+          </div>
+        );
+      case 1:
+        return (
+          <div>
+            <h2> New patient info</h2>
+            <div>
+              {Object.keys(this.state.TempPatient).map((val, key) => {
+                return (
+                  <p key={key}>
+                    {val} : {this.state.TempPatient[val]}
+                  </p>
+                );
+              })}
+
+            </div>
+            <p> Are you sure?</p>
+            <Button
+              variant="contained"
+              className={classes.button}
+              color="primary"
+              onClick={this.handleBack}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              className={classes.button}
+              color="primary"
+              onClick={this.handleSure}
+            >
+              Sure
+            </Button>
+          </div>
+        );
+      case 2:
+        return <div> Edit successfully</div>;
+      default:
+        return <div> Loading </div>;
     }
   }
 }

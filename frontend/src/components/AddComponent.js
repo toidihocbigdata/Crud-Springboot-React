@@ -20,7 +20,7 @@ class AddComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      Done: false,
+      Done: 0,
       TempPatient: {
         name: "",
         gender: "",
@@ -31,30 +31,32 @@ class AddComponent extends Component {
     };
     this.handleInput = this.handleInput.bind(this);
     this.handleBack = this.handleBack.bind(this);
-    this.handleSubmit = this.handleSure.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSure = this.handleSure.bind(this);
   }
 
   handleSubmit = (evt) => {
     evt.preventDefault();
     let temp = this.state;
-    temp.Done = true;
+    temp.Done = 1;
     this.setState(temp);
-};
+  };
 
-handleSure = (evt) => {
+  handleSure = (evt) => {
     evt.preventDefault();
     let data = this.state.TempPatient;
     data["created_at"] = new Date().toUTCString();
     data["updated_at"] = new Date().toUTCString();
-    PatientDataService.createPatient(data);
-  }
+    PatientDataService.createPatient(data).then(this.setState({Done:2}));
+  };
 
   handleBack = (evt) => {
     evt.preventDefault();
+    console.log("AKI");
     let temp = this.state;
-    temp.Done = false;
+    temp.Done = 0;
     this.setState(temp);
-  }
+  };
 
   handleInput = (evt) => {
     const name = evt.target.name;
@@ -66,86 +68,71 @@ handleSure = (evt) => {
 
   render() {
     const { classes } = this.props;
-    if (this.state.Done == false) {
+    switch (this.state.Done) 
+    {
+    case 0:
       return (
         <div className={classes.root}>
           <h2> Add new patient</h2>
           {/* <form onSubmit={this.handleSubmit}> */}
-            <TextField
-              label="Name"
-              name="name"
-              defaultValue={this.state.TempPatient.name}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
-            <TextField
-              label="Gender"
-              name="gender"
-              defaultValue={this.state.TempPatient.gender}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
-            {/* <TextField
-              select
-              label="Gender"
-              name="gender"
-              defaultValue="Male"
-              className={classes.textField}
-              
-            >
-              <MenuItem key="Male" value="Male">
-                Male
-              </MenuItem>
-              <MenuItem key="Female" value="Female">
-                Female
-              </MenuItem>
-            </TextField>
-            <br /> */}
-            <TextField
-              label="Age"
-              name="age"
-              defaultValue={this.state.TempPatient.age}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
-            <TextField
-              label="Phone Number"
-              name="phone_number"
-              defaultValue={this.state.TempPatient.phone_number}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
-            <TextField
-              label="Email"
-              name="email"
-              defaultValue={this.state.TempPatient.email}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
-            <Button
+          <TextField
+            label="Name"
+            name="name"
+            defaultValue={this.state.TempPatient.name}
+            className={classes.textField}
+            onChange={this.handleInput}
+          />
+          <br />
+          <TextField
+            label="Gender"
+            name="gender"
+            defaultValue={this.state.TempPatient.gender}
+            className={classes.textField}
+            onChange={this.handleInput}
+          />
+          <br />
+          <TextField
+            label="Age"
+            name="age"
+            defaultValue={this.state.TempPatient.age}
+            className={classes.textField}
+            onChange={this.handleInput}
+          />
+          <br />
+          <TextField
+            label="Phone Number"
+            name="phone_number"
+            defaultValue={this.state.TempPatient.phone_number}
+            className={classes.textField}
+            onChange={this.handleInput}
+          />
+          <br />
+          <TextField
+            label="Email"
+            name="email"
+            defaultValue={this.state.TempPatient.email}
+            className={classes.textField}
+            onChange={this.handleInput}
+          />
+          <br />
+          <Button
             //   type="submit"
-              onClick = {this.handleSubmit}
-              variant="contained"
-              className={classes.button}
-              color="primary"
-            >
-              Submit
-            </Button>
+            onClick={this.handleSubmit}
+            variant="contained"
+            className={classes.button}
+            color="primary"
+          >
+            Submit
+          </Button>
           {/* </form> */}
         </div>
       );
-    } else {
- 
+      break;
+    case 1:
       return (
         <div>
           <h2> New patient info</h2>
-          {
-          Object.keys(this.state.TempPatient).map((a) => (
+          {Object.keys(this.state.TempPatient).map((a) => (
             <p>
               {a} : {this.state.TempPatient[a]}
             </p>
@@ -155,17 +142,25 @@ handleSure = (evt) => {
             variant="contained"
             className={classes.button}
             color="primary"
-            onClick = {this.handleBack}>
+            onClick={this.handleBack}
+          >
             No
           </Button>
           <Button
             variant="contained"
             className={classes.button}
-            color="primary">
+            color="primary"
+            onClick={this.handleSure}
+          >
             Sure
           </Button>
         </div>
       );
+    break;
+    default:
+        return(
+            <div> add success, click homepage to return</div>
+        );
     }
   }
 }

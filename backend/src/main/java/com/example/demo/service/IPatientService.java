@@ -9,6 +9,6 @@ public interface IPatientService {
     List<Patient> findAll();
     boolean add(Patient patient);
     boolean delete(Long patient_id);
-    boolean update(Patient patient);
+    boolean update(Patient patient, long id);
     Optional<Patient> get(Long id);
 }

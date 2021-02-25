@@ -33,10 +33,9 @@ class InstructorApp extends Component {
 
   render() {
     var Body;
-    // console.log(this.state.mainState);
     switch (this.state.mainState) {
       case ADD:
-        Body = <AddComponent strr="hello"/>;
+        Body = <AddComponent/>;
         break;
       case EDIT:
         Body = <EditComponent id = {this.state.tempID}/>;

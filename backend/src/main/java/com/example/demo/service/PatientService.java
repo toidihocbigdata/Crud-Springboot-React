@@ -34,9 +34,14 @@ public class PatientService implements IPatientService {
         return true;
     }
     @Override
-    public boolean update(Patient patient)
+    public boolean update(Patient patient, long id)
     {
-        //TODO
+//        Optional<Patient> tempPatient = repository.findById(id);
+        System.out.println("updated patient id ");
+        System.out.println(id);
+        Patient tempPatient = patient;
+        tempPatient.setPatient_id(id);
+        repository.save(tempPatient);
         return true;
     }
     @Override
