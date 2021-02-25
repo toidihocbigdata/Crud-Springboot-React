@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Button, TextField } from "@material-ui/core";
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import { withStyles } from "@material-ui/core/styles";
 import PatientDataService from "../services/PatientDataService";
 const useStyles = (theme) => ({
@@ -96,13 +98,17 @@ class EditComponent extends Component {
             />
             <br />
             <TextField
-              label="Gender"
-              name="gender"
-              defaultValue={this.state.TempPatient.gender}
-              className={classes.textField}
-              onChange={this.handleInput}
-            />
-            <br />
+            label="Gender"
+            name="gender"
+            defaultValue={this.state.TempPatient.gender}
+            className={classes.textField}
+            onChange={this.handleInput}
+            select
+            >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+            </TextField>
+            <br/>
             <TextField
               label="Age"
               name="age"
@@ -140,7 +146,7 @@ class EditComponent extends Component {
       case 1:
         return (
           <div>
-            <h2> New patient info</h2>
+            <h2> Editted patient info</h2>
             <div>
               {Object.keys(this.state.TempPatient).map((val, key) => {
                 return (

@@ -47,7 +47,7 @@ class AddComponent extends Component {
     let data = this.state.TempPatient;
     data["created_at"] = new Date().toUTCString();
     data["updated_at"] = new Date().toUTCString();
-    PatientDataService.createPatient(data).then(this.setState({Done:2}));
+    PatientDataService.createPatient(data).then(this.setState({ Done: 2 }));
   };
 
   handleBack = (evt) => {
@@ -68,99 +68,100 @@ class AddComponent extends Component {
 
   render() {
     const { classes } = this.props;
-    switch (this.state.Done) 
-    {
-    case 0:
-      return (
-        <div className={classes.root}>
-          <h2> Add new patient</h2>
-          {/* <form onSubmit={this.handleSubmit}> */}
-          <TextField
-            label="Name"
-            name="name"
-            defaultValue={this.state.TempPatient.name}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Gender"
-            name="gender"
-            defaultValue={this.state.TempPatient.gender}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Age"
-            name="age"
-            defaultValue={this.state.TempPatient.age}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Phone Number"
-            name="phone_number"
-            defaultValue={this.state.TempPatient.phone_number}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <TextField
-            label="Email"
-            name="email"
-            defaultValue={this.state.TempPatient.email}
-            className={classes.textField}
-            onChange={this.handleInput}
-          />
-          <br />
-          <Button
-            //   type="submit"
-            onClick={this.handleSubmit}
-            variant="contained"
-            className={classes.button}
-            color="primary"
-          >
-            Submit
-          </Button>
-          {/* </form> */}
-        </div>
-      );
-      break;
-    case 1:
-      return (
-        <div>
-          <h2> New patient info</h2>
-          {Object.keys(this.state.TempPatient).map((a) => (
-            <p>
-              {a} : {this.state.TempPatient[a]}
-            </p>
-          ))}
-          <p> Are you sure?</p>
-          <Button
-            variant="contained"
-            className={classes.button}
-            color="primary"
-            onClick={this.handleBack}
-          >
-            No
-          </Button>
-          <Button
-            variant="contained"
-            className={classes.button}
-            color="primary"
-            onClick={this.handleSure}
-          >
-            Sure
-          </Button>
-        </div>
-      );
-    break;
-    default:
-        return(
-            <div> add success, click homepage to return</div>
+    switch (this.state.Done) {
+      case 0:
+        return (
+          <div className={classes.root}>
+            <h2> Add new patient</h2>
+            {/* <form onSubmit={this.handleSubmit}> */}
+            <TextField
+              label="Name"
+              name="name"
+              defaultValue={this.state.TempPatient.name}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Gender"
+              name="gender"
+            //   defaultValue="Male"
+              className={classes.textField}
+              onChange={this.handleInput}
+              select
+            >
+              <MenuItem value="Male">Male</MenuItem>
+              <MenuItem value="Female">Female</MenuItem>
+            </TextField>
+            <br />
+            <TextField
+              label="Age"
+              name="age"
+              defaultValue={this.state.TempPatient.age}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Phone Number"
+              name="phone_number"
+              defaultValue={this.state.TempPatient.phone_number}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <TextField
+              label="Email"
+              name="email"
+              defaultValue={this.state.TempPatient.email}
+              className={classes.textField}
+              onChange={this.handleInput}
+            />
+            <br />
+            <Button
+              //   type="submit"
+              onClick={this.handleSubmit}
+              variant="contained"
+              className={classes.button}
+              color="primary"
+            >
+              Submit
+            </Button>
+            {/* </form> */}
+          </div>
         );
+        break;
+      case 1:
+        return (
+          <div>
+            <h2> New patient info</h2>
+            {Object.keys(this.state.TempPatient).map((a) => (
+              <p>
+                {a} : {this.state.TempPatient[a]}
+              </p>
+            ))}
+            <p> Are you sure?</p>
+            <Button
+              variant="contained"
+              className={classes.button}
+              color="primary"
+              onClick={this.handleBack}
+            >
+              No
+            </Button>
+            <Button
+              variant="contained"
+              className={classes.button}
+              color="primary"
+              onClick={this.handleSure}
+            >
+              Sure
+            </Button>
+          </div>
+        );
+        break;
+      default:
+        return <div> add success, click homepage to return</div>;
     }
   }
 }
